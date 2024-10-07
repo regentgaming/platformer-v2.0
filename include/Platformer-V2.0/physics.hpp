@@ -8,6 +8,35 @@ class Physics {
     virtual void makingAbstract() = 0;
 
     public:
+        struct Vector2D {
+            private:
+                double x;
+                double y;
+            public:
+                Vector2D(double x, double y) {
+                    this->x = x;
+                    this->y = y;
+                }
+                
+                /**
+                 * @brief Returns the x value
+                 * @return the x value
+                 */
+                double getX() {return x;}
+                /**
+                 * @brief Returns the y value
+                 * @return the y value
+                 */
+                double getY() {return y;}
+
+                Vector2D operator+(Vector2D const& other) {
+                    Vector2D ret = Vector2D(x + other.x, y + other.y);
+                }
+        };
+
+
+
+
         /**
          * @brief Adds an ICollidable object to the list of static objects.
          * If the list has nothing in it, instantiates the list
