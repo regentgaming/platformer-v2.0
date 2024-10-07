@@ -1,1 +1,1 @@
-Platformer with realistic physics and stuff
+Platformer physics engine tech demo, may or may not get expanded into a full game
