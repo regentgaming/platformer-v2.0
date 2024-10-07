@@ -4,6 +4,8 @@ Physics Class:
     Collision Detection (probably contain bounding box struct)
     2DVec struct (for forces and velocity and shit)
 
+Might need some kind of interface defined before the physics class in order to accept each of these inside it
+
 Object Class:
     The base class for all things (name wip)
     has color, position, and BB (bounding box)
