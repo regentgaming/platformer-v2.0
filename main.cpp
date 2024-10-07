@@ -1,5 +1,5 @@
 #include <iostream>
-#include "src/include/SDL2/SDL.h"
+#include "include/SDL2/SDL.h"
 
 int main(int argc, char *argv[]) {
     const int WIDTH = 800, HEIGHT = 600;
