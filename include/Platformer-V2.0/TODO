@@ -2,7 +2,7 @@ Physics Class:
     Abstract physics package
     Contains the constants
     Collision Detection (probably contain bounding box struct)
-    2DVec struct (for forces and velocity and shit)
+    2DVec struct (for forces and velocity and shit) this is in its own file now
 
 Might need some kind of interface defined before the physics class in order to accept each of these inside it
 
