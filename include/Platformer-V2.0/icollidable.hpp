@@ -3,5 +3,5 @@
  */
 class ICollidable {
     public:
-        virtual void handleCollision(ICollidable other) = 0;
+        virtual void handleCollision(ICollidable& other) = 0;
 };

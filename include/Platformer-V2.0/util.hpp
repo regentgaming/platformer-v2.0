@@ -38,7 +38,7 @@ class BoundingBox {
 
         BoundingBox() = default;
 
-        bool isIntersecting(BoundingBox other) {
+        bool isIntersecting(BoundingBox& other) {
             return (LR.getX() > other.UL.getX() && other.LR.getX() > UL.getX()) && (LR.getY() > other.UL.getY() && other.LR.getY() > UL.getY());
         }
 };

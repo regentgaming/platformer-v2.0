@@ -3,8 +3,8 @@
 #include <vector>
 
 class Physics {
-    static std::vector<ICollidable*> statics;
-    static std::vector<ICollidable*> dynamics;
+    static std::vector<ICollidable&> statics;
+    static std::vector<ICollidable&> dynamics;
     //Dummy virtual function to make the class abstract
     virtual void makingAbstract() = 0;
 
@@ -15,9 +15,9 @@ class Physics {
          * @param object The object to be added
          * @return None
          */
-        static void addStatic(ICollidable* object) {
+        static void addStatic(ICollidable& object) {
             if (&statics == nullptr) {
-                statics = std::vector<ICollidable*>();
+                statics = std::vector<ICollidable&>();
             }
             statics.push_back(object);
         }
@@ -28,9 +28,9 @@ class Physics {
          * @param object The object to be added
          * @return None
          */
-        static void addDynamic(ICollidable* object) {
+        static void addDynamic(ICollidable& object) {
             if (&dynamics == nullptr) {
-                dynamics = std::vector<ICollidable*>();
+                dynamics = std::vector<ICollidable&>();
             }
             dynamics.push_back(object);
         }
