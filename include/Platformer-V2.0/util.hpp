@@ -20,6 +20,10 @@ class Vector2D {
                 Vector2D operator+(Vector2D const& other) {
                     Vector2D ret = Vector2D(x + other.x, y + other.y);
                 }
+
+                bool operator==(Vector2D const& other) {
+                    return (x==other.x) && (y==other.y);
+                }
 };
 
 class BoundingBox {
