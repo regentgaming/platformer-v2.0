@@ -2,10 +2,9 @@
 #include "physics.hpp"
 
 
-Object::Object(Color color_p, BoundingBox hitbox_p, Vector2D position_p, Physics* Physics, bool isOneWay_p) {
+Object::Object(Color color_p, BoundingBox hitbox_p, Physics* Physics, bool isOneWay_p) {
     color = color_p;
     hitbox = hitbox_p;
-    position = position_p;
     isOneWay = isOneWay_p;
     Physics->addStatic(this);
 }

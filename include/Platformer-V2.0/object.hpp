@@ -7,10 +7,9 @@ class Object : public ICollidable {
     private:
         Color color;
         BoundingBox hitbox;
-        Vector2D position;
         bool isOneWay;
     public:
-        Object(Color color_p, BoundingBox hitbox_p, Vector2D position_p, Physics* Physics, bool isOneWay_p = false);
+        Object(Color color_p, BoundingBox hitbox_p, Physics* Physics, bool isOneWay_p = false);
 
         Color getColor() {
             return color;
@@ -18,10 +17,6 @@ class Object : public ICollidable {
 
         BoundingBox getHitbox() {
             return hitbox;
-        }
-
-        Vector2D getPosition() {
-            return position;
         }
 
         //virtual void handleCollision(ICollidable& other);
