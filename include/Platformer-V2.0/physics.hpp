@@ -1,26 +1,23 @@
+#pragma once
 #include "icollidable.hpp"
 #include "util.hpp"
 #include <vector>
 
 class Physics {
-    static std::vector<ICollidable&> statics;
-    static std::vector<ICollidable&> dynamics;
-    //Dummy virtual function to make the class abstract
-    virtual void makingAbstract() = 0;
+    std::vector<ICollidable*> statics;
+    std::vector<ICollidable*> dynamics;
 
     public:
+
+        const double gravity = 10.0;
+
         /**
          * @brief Adds an ICollidable object to the list of static objects.
          * If the list has nothing in it, instantiates the list
          * @param object The object to be added
          * @return None
          */
-        static void addStatic(ICollidable& object) {
-            if (&statics == nullptr) {
-                statics = std::vector<ICollidable&>();
-            }
-            statics.push_back(object);
-        }
+        void addStatic(ICollidable* object);
 
         /**
          * @brief Adds an ICollidable object to the list of dynamic objects.
@@ -28,12 +25,15 @@ class Physics {
          * @param object The object to be added
          * @return None
          */
-        static void addDynamic(ICollidable& object) {
-            if (&dynamics == nullptr) {
-                dynamics = std::vector<ICollidable&>();
-            }
-            dynamics.push_back(object);
+        void addDynamic(ICollidable* object);
+
+        std::vector<ICollidable*> getStatics() {
+            return statics;
         }
 
-        static void detectCollision();
+        std::vector<ICollidable*> getDynamics() {
+            return dynamics;
+        }
+
+        //static void detectCollision();
 };

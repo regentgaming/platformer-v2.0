@@ -1,5 +1,7 @@
 #include <iostream>
 #include "include/SDL2/SDL.h"
+#include "include/Platformer-V2.0/physics.hpp"
+#include "include/Platformer-V2.0/object.hpp"
 
 int main(int argc, char *argv[]) {
     const int WIDTH = 800, HEIGHT = 600;
@@ -26,9 +28,17 @@ int main(int argc, char *argv[]) {
     SDL_SetRenderDrawColor(renderer,255,255,255,255);
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
-    SDL_RenderPresent(renderer);
     bool keep_window_open = true;
+    Physics physics = Physics();
+    Object test = Object(Color(255,0,0),BoundingBox(400,400,40,40),Vector2D(400,400),&physics);
+    Object test2 = Object(Color(255,0,255),BoundingBox(500,500,40,40),Vector2D(500,500),&physics);
     while (keep_window_open) {
+        SDL_SetRenderDrawColor(renderer,255,255,255,SDL_ALPHA_OPAQUE);
+        SDL_RenderClear(renderer);
+        for (ICollidable* object : physics.getStatics()) {
+            (*object).draw(renderer);
+        }
+        SDL_RenderPresent(renderer);
         while (SDL_PollEvent(&windowEvent) > 0) {
             switch(windowEvent.type) {
                 case SDL_QUIT:

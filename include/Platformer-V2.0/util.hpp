@@ -1,3 +1,6 @@
+#pragma once
+#include "SDL2/SDL.h"
+
 class Vector2D {
             private:
                 double x;
@@ -19,6 +22,7 @@ class Vector2D {
 
                 Vector2D operator+(Vector2D const& other) {
                     Vector2D ret = Vector2D(x + other.x, y + other.y);
+                    return ret;
                 }
 
                 bool operator==(Vector2D const& other) {
@@ -40,5 +44,41 @@ class BoundingBox {
 
         bool isIntersecting(BoundingBox& other) {
             return (LR.getX() > other.UL.getX() && other.LR.getX() > UL.getX()) && (LR.getY() > other.UL.getY() && other.LR.getY() > UL.getY());
+        }
+
+        SDL_FRect convertToFRect() {
+            SDL_FRect rect;
+            rect.x = UL.getX();
+            rect.y = UL.getY();
+            rect.h = LR.getY() - UL.getY();
+            rect.w = LR.getX() - UL.getX();
+            return rect;
+        }
+};
+
+class Color {
+    private:
+        int red;
+        int green;
+        int blue;
+    public:
+        Color(int r, int g, int b) {
+            red = r;
+            green = g;
+            blue = b;
+        }
+
+        Color() = default;
+
+        int getRed() {
+            return red;
+        }
+
+        int getBlue() {
+            return blue;
+        }
+
+        int getGreen() {
+            return green;
         }
 };
