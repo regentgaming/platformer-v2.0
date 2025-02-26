@@ -6,6 +6,5 @@
  */
 class ICollidable {
     public:
-        //virtual void handleCollision(ICollidable& other);
-        virtual void draw(SDL_Renderer* renderer)=0;
+        virtual void draw(SDL_Renderer* renderer) = 0;
 };

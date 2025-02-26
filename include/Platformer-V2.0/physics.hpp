@@ -9,7 +9,7 @@ class Physics {
 
     public:
 
-        const double gravity = 10.0;
+        const double gravity = 5.0;
 
         /**
          * @brief Adds an ICollidable object to the list of static objects.
@@ -35,5 +35,5 @@ class Physics {
             return dynamics;
         }
 
-        //static void detectCollision();
+        void detectCollision(ICollidable* dynamic);
 };

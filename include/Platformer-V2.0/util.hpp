@@ -13,15 +13,20 @@ class Vector2D {
                  * @brief Returns the x value
                  * @return the x value
                  */
-                double getX() {return x;}
+                double* getX() {return &x;}
                 /**
                  * @brief Returns the y value
                  * @return the y value
                  */
-                double getY() {return y;}
+                double* getY() {return &y;}
 
                 Vector2D operator+(Vector2D const& other) {
                     Vector2D ret = Vector2D(x + other.x, y + other.y);
+                    return ret;
+                }
+
+                Vector2D operator*(double const& other) {
+                    Vector2D ret = Vector2D(x * other, y * other);
                     return ret;
                 }
 
@@ -31,10 +36,9 @@ class Vector2D {
 };
 
 class BoundingBox {
-    private:
+    public:
         Vector2D UL;
         Vector2D LR;
-    public:
         BoundingBox(double x, double y, double height, double width) {
             UL = Vector2D(x,y);
             LR = Vector2D(x+width,y+height);
@@ -42,16 +46,16 @@ class BoundingBox {
 
         BoundingBox() = default;
 
-        bool isIntersecting(BoundingBox& other) {
-            return (LR.getX() > other.UL.getX() && other.LR.getX() > UL.getX()) && (LR.getY() > other.UL.getY() && other.LR.getY() > UL.getY());
+        bool isIntersecting(BoundingBox* other) {
+            return (*LR.getX() > *other->UL.getX() && *other->LR.getX() > *UL.getX()) && (*LR.getY() > *other->UL.getY() && *other->LR.getY() > *UL.getY());
         }
 
         SDL_FRect convertToFRect() {
             SDL_FRect rect;
-            rect.x = UL.getX();
-            rect.y = UL.getY();
-            rect.h = LR.getY() - UL.getY();
-            rect.w = LR.getX() - UL.getX();
+            rect.x = *UL.getX();
+            rect.y = *UL.getY();
+            rect.h = *LR.getY() - *UL.getY();
+            rect.w = *LR.getX() - *UL.getX();
             return rect;
         }
 };

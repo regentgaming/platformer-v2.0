@@ -5,7 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/src/include",
-                "${workspaceFolder}/include/Platformer-V2.0"
+                "${workspaceFolder}/include/Platformer-v2.0"
             ],
             "defines": [
                 "_DEBUG",

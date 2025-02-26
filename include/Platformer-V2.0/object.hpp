@@ -8,18 +8,18 @@ class Object : public ICollidable {
         Color color;
         BoundingBox hitbox;
         bool isOneWay;
+    protected:
+        Object(Color color_p, BoundingBox hitbox_p);
     public:
-        Object(Color color_p, BoundingBox hitbox_p, Physics* Physics, bool isOneWay_p = false);
+        Object(Color color_p, BoundingBox hitbox_p, Physics* physics, bool isOneWay_p);
 
-        Color getColor() {
-            return color;
+        Color* getColor() {
+            return &color;
         }
 
-        BoundingBox getHitbox() {
-            return hitbox;
+        BoundingBox* getHitbox() {
+            return &hitbox;
         }
-
-        //virtual void handleCollision(ICollidable& other);
 
         void draw(SDL_Renderer* renderer);
 };
