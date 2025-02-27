@@ -1,8 +1,7 @@
 #include <iostream>
 #include "include/SDL2/SDL.h"
 #include "include/Platformer-V2.0/physics.hpp"
-#include "include/Platformer-V2.0/object.hpp"
-#include "include/Platformer-V2.0/dynamicobject.cpp"
+#include "include/Platformer-V2.0/dynamicobject.hpp"
 
 int main(int argc, char *argv[]) {
     const int WIDTH = 800, HEIGHT = 600;
