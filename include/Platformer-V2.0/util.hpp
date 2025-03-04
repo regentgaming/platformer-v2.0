@@ -70,6 +70,13 @@ class BoundingBox {
             LR.setY(UL.getY() + h);
         }
 
+        void moveTo(double x, double y) {
+            UL.setX(x);
+            UL.setY(y);
+            LR.setX(UL.getX() + w);
+            LR.setY(UL.getY() + h);
+        }
+
         SDL_FRect convertToFRect() {
             SDL_FRect rect;
             rect.x = UL.getX();

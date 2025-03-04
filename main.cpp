@@ -3,6 +3,15 @@
 #include "include/Platformer-V2.0/physics.hpp"
 #include "include/Platformer-V2.0/player.hpp"
 
+void screenWrap(DynamicObject* dynamic, const int w) {
+    BoundingBox* hitbox = dynamic->getHitbox();
+    if (hitbox->LR.getX() < 0) {
+        hitbox->moveTo(w,hitbox->UL.getY());
+    } else if (hitbox->UL.getX() > w) {
+        hitbox->moveTo(0-hitbox->w,hitbox->UL.getY());
+    }
+}
+
 int main(int argc, char *argv[]) {
     const int WIDTH = 800, HEIGHT = 600;
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -30,7 +39,7 @@ int main(int argc, char *argv[]) {
     SDL_RenderPresent(renderer);
     bool keep_window_open = true;
     Physics physics = Physics();
-    Object test = Object(Color(0,255,0),BoundingBox(0,500,100,800),&physics,false);
+    Object test = Object(Color(0,255,0),BoundingBox(-50,500,100,900),&physics,false);
     Player player = Player(Color(255,0,0),BoundingBox(300,100,50,50),&physics);
     DynamicObject test3 = DynamicObject(Color(0,0,255),BoundingBox(375,50,50,50),&physics);
     Uint64 NOW = SDL_GetPerformanceCounter();
@@ -49,14 +58,14 @@ int main(int argc, char *argv[]) {
         }
         for (ICollidable* object : physics.getDynamics()) {
             ((DynamicObject*)object)->update(&physics,deltaTime);
+            screenWrap((DynamicObject*)object,WIDTH);
             object->draw(renderer);
         }
         SDL_RenderPresent(renderer);
-        while (SDL_PollEvent(&windowEvent) > 0) {
-            const Uint8* keys = SDL_GetKeyboardState(NULL);
+        const Uint8* keys = SDL_GetKeyboardState(NULL);
             if (keys[SDL_SCANCODE_W]) {
                 player.jump();
-            } 
+            }
             if (keys[SDL_SCANCODE_A]) {
                 player.move(-1);
             } else if (keys[SDL_SCANCODE_D]) {
@@ -64,6 +73,7 @@ int main(int argc, char *argv[]) {
             } else {
                 player.move(0);
             }
+        while (SDL_PollEvent(&windowEvent) > 0) {
             switch(windowEvent.type) {
                 case SDL_QUIT:
                 keep_window_open = false;

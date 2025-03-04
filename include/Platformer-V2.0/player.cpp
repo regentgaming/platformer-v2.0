@@ -6,8 +6,8 @@
 Player::Player(Color color_p, BoundingBox hitbox_p, Physics* physics) : DynamicObject::DynamicObject(color_p, hitbox_p, physics) {}
 
 void Player::jump() {
-    if (onGround) {
-        onGround = false;
+    if (isOnGround()) {
+        setOnGround(false);
         (getVelocity()->setY((getVelocity()->getY()) + JUMP_FORCE));
     }
 }

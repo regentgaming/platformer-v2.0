@@ -5,8 +5,8 @@ class DynamicObject : public Object {
     private:
         Vector2D velocity;
         Vector2D acceleration;
-    public:
         bool onGround;
+    public:
         DynamicObject(Color color_p, BoundingBox hitbox_p, Physics* physics);
         virtual void update(Physics* physics,double deltaTime);
         void handleCollisionY(Physics* physics, BoundingBox* other);
@@ -15,4 +15,6 @@ class DynamicObject : public Object {
         void detectCollisionX(ICollidable* dynamic, Physics* physics);
         Vector2D* getVelocity();
         Vector2D* getAcceleration();
+        bool isOnGround();
+        void setOnGround(bool val);
 };
