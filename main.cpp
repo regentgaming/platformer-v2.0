@@ -53,31 +53,20 @@ int main(int argc, char *argv[]) {
         }
         SDL_RenderPresent(renderer);
         while (SDL_PollEvent(&windowEvent) > 0) {
-            if (SDL_GetKeyboardState(NULL)[SDLK_w]) {
-                std::cout << "jumped\n";
+            const Uint8* keys = SDL_GetKeyboardState(NULL);
+            if (keys[SDL_SCANCODE_W]) {
                 player.jump();
+            } 
+            if (keys[SDL_SCANCODE_A]) {
+                player.move(-1);
+            } else if (keys[SDL_SCANCODE_D]) {
+                player.move(1);
+            } else {
+                player.move(0);
             }
             switch(windowEvent.type) {
                 case SDL_QUIT:
                 keep_window_open = false;
-                    break;
-                case SDL_KEYDOWN:
-                    // std::cout << "key press\n";
-                    switch (windowEvent.key.keysym.sym) {
-                        case SDLK_w:
-                            player.jump();
-                            break;
-                        case SDLK_a:
-                            player.move(-1);
-                            break;
-                        case SDLK_d:
-                            player.move(1);
-                            break;
-                    }
-                    break;
-                case SDL_KEYUP:
-                    // std::cout << "key unpress\n";
-                    player.move(0);
                     break;
             }
         }
