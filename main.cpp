@@ -3,12 +3,16 @@
 #include "include/Platformer-V2.0/physics.hpp"
 #include "include/Platformer-V2.0/player.hpp"
 
-void screenWrap(DynamicObject* dynamic, const int w) {
+void screenWrap(DynamicObject* dynamic, const int w, const int h) {
     BoundingBox* hitbox = dynamic->getHitbox();
     if (hitbox->LR.getX() < 0) {
         hitbox->moveTo(w,hitbox->UL.getY());
     } else if (hitbox->UL.getX() > w) {
         hitbox->moveTo(0-hitbox->w,hitbox->UL.getY());
+    }
+
+    if (hitbox->UL.getY() > h) {
+        hitbox->moveTo(hitbox->UL.getX(),0-hitbox->h);
     }
 }
 
@@ -58,7 +62,7 @@ int main(int argc, char *argv[]) {
         }
         for (ICollidable* object : physics.getDynamics()) {
             ((DynamicObject*)object)->update(&physics,deltaTime);
-            screenWrap((DynamicObject*)object,WIDTH);
+            screenWrap((DynamicObject*)object,WIDTH,HEIGHT);
             object->draw(renderer);
         }
         SDL_RenderPresent(renderer);
