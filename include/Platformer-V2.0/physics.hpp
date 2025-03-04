@@ -34,6 +34,4 @@ class Physics {
         std::vector<ICollidable*> getDynamics() {
             return dynamics;
         }
-
-        void detectCollision(ICollidable* dynamic);
 };
