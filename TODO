@@ -1,5 +1,3 @@
-Updated TODO 3/4/25
-Add documentation to everything that is currently in project
+Updated TODO 3/6/2025:
 
-
-thats about it right now
+Make collision between two dynamics work properly; i.e. things pushing other things

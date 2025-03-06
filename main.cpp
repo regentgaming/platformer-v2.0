@@ -1,8 +1,11 @@
 #include <iostream>
 #include "include/SDL2/SDL.h"
-#include "include/Platformer-V2.0/physics.hpp"
 #include "include/Platformer-V2.0/player.hpp"
 
+/* 
+* helper function for wrapping things around the screen
+* will probably be relocated soon
+*/
 void screenWrap(DynamicObject* dynamic, const int w, const int h) {
     BoundingBox* hitbox = dynamic->getHitbox();
     if (hitbox->LR.getX() < 0) {

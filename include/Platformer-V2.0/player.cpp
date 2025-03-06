@@ -3,8 +3,10 @@
 #define JUMP_FORCE -3
 #define MOVE_FORCE 3
 
+//public constructor for building a Player object
 Player::Player(Color color_p, BoundingBox hitbox_p, Physics* physics) : DynamicObject::DynamicObject(color_p, hitbox_p, physics) {}
 
+//function that makes the Player jump
 void Player::jump() {
     if (isOnGround()) {
         setOnGround(false);
@@ -12,6 +14,7 @@ void Player::jump() {
     }
 }
 
+//function that makes the Player move
 void Player::move(int dir) {
     if (dir > 0) {
         (getAcceleration()->setX(MOVE_FORCE));
@@ -22,6 +25,7 @@ void Player::move(int dir) {
     }
 }
 
+//update function for each frame
 void Player::update(Physics* physics,double deltaTime) {
     DynamicObject::update(physics, deltaTime);
 }

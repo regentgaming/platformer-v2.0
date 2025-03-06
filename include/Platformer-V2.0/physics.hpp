@@ -3,35 +3,42 @@
 #include "util.hpp"
 #include <vector>
 
+/**
+ * A class that contains all the physics objects and constants for the project
+ */
 class Physics {
+    /// a vector containing all the static objects for the project
     std::vector<ICollidable*> statics;
+    /// a vector containing all the dynamic objects for the project
     std::vector<ICollidable*> dynamics;
 
     public:
-
+        /// the acceleration due to gravity for the project (not real world accurate)
         const double gravity = 5.0;
 
         /**
-         * @brief Adds an ICollidable object to the list of static objects.
+         * Adds an ICollidable object to the list of static objects.
          * If the list has nothing in it, instantiates the list
          * @param object The object to be added
-         * @return None
          */
         void addStatic(ICollidable* object);
 
         /**
-         * @brief Adds an ICollidable object to the list of dynamic objects.
+         * Adds an ICollidable object to the list of dynamic objects.
          * If the list has nothing in it, instantiates the list
          * @param object The object to be added
-         * @return None
          */
         void addDynamic(ICollidable* object);
 
-        std::vector<ICollidable*> getStatics() {
-            return statics;
-        }
+        /**
+         * Returns the static object vector
+         * @return the static object vector
+         */
+        std::vector<ICollidable*> getStatics();
 
-        std::vector<ICollidable*> getDynamics() {
-            return dynamics;
-        }
+        /**
+         * Returns the dynamic object vector
+         * @return the dynamic object vector
+         */
+        std::vector<ICollidable*> getDynamics();
 };
