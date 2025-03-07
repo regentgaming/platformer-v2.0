@@ -1,7 +1,7 @@
 #include "player.hpp"
 
-#define JUMP_FORCE -3
-#define MOVE_FORCE 3
+#define JUMP_FORCE -300
+#define MOVE_FORCE 300
 
 //public constructor for building a Player object
 Player::Player(Color color_p, BoundingBox hitbox_p, Physics* physics) : DynamicObject::DynamicObject(color_p, hitbox_p, physics) {}

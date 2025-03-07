@@ -14,7 +14,7 @@ class Physics {
 
     public:
         /// the acceleration due to gravity for the project (not real world accurate)
-        const double gravity = 5.0;
+        const double gravity = 250;
 
         /**
          * Adds an ICollidable object to the list of static objects.

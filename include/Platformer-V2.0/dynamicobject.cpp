@@ -1,13 +1,16 @@
 #include "dynamicobject.hpp"
 #include <cmath>
 
-#define MAX_VEL_X 5
-#define MAX_VEL_Y 10
-#define FRICTION 0.05
+//TODO: Fix these so they make sense
+#define MAX_VEL_X 200
+#define MAX_VEL_Y 500
+#define FRICTION 5
 
 //the public constructor for building a DynamicObject
 DynamicObject::DynamicObject(Color color_p, BoundingBox hitbox_p, Physics* physics) : Object::Object(color_p, hitbox_p) {
     physics->addDynamic(this);
+    velocity = Vector2D(0,0);
+    acceleration = Vector2D(0,0);
     onGround = false;
 }
 
