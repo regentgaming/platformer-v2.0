@@ -107,11 +107,11 @@ void DynamicObject::update(Physics* physics,double deltaTime) {
     BoundingBox* hitbox = getHitbox();
     
     velocity.setY((velocity.getY()) + ((acceleration.getY()) * deltaTime ));
-    hitbox->move(0, velocity.getY());
+    hitbox->move(0, velocity.getY() * deltaTime);
     detectCollisionY(this, physics);
 
     velocity.setX((velocity.getX()) + ((acceleration.getX()) * deltaTime));
-    hitbox->move(velocity.getX(), 0);
+    hitbox->move(velocity.getX() * deltaTime, 0);
     detectCollisionX(this, physics);
 
     if ((velocity.getY()) > MAX_VEL_Y) {
@@ -126,7 +126,7 @@ void DynamicObject::update(Physics* physics,double deltaTime) {
         velocity.setX(-1 * MAX_VEL_X);
     }
     if (acceleration.getX() == 0 && onGround) {
-        velocity.setX(velocity.getX() + velocity.getX() * -1 * FRICTION);
+        velocity.setX(velocity.getX() + velocity.getX() * -1 * FRICTION * deltaTime);
         if (fabs(velocity.getX()) < 0.01) {
             velocity.setX(0);
         }
