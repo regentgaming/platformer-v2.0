@@ -1,5 +1,5 @@
 #pragma once
-#include "SDL2/SDL.h"
+#include "SDL3/SDL.h"
 
 /**
  * An interface class used to represent all objects inside the Physics class

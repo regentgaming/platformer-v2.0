@@ -1,5 +1,5 @@
 #include <iostream>
-#include "include/SDL2/SDL.h"
+#include "include/SDL3/SDL.h"
 #include "include/Platformer-V2.0/player.hpp"
 
 /* 
@@ -21,19 +21,19 @@ void screenWrap(DynamicObject* dynamic, const int w, const int h) {
 
 int main(int argc, char *argv[]) {
     const int WIDTH = 800, HEIGHT = 600;
-    SDL_Init(SDL_INIT_EVERYTHING);
+    SDL_Init(SDL_INIT_EVENTS);
 
-    SDL_Window *window = SDL_CreateWindow("Test window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI  | SDL_WINDOW_RESIZABLE);
+    SDL_Window *window = SDL_CreateWindow("Game", WIDTH, HEIGHT, SDL_WINDOW_HIGH_PIXEL_DENSITY  | SDL_WINDOW_RESIZABLE);
     
     SDL_Event windowEvent;
 
     if (!window) {
         std::cout << "Failed to create window\n";
-        std::cout << "SDL2 Error: " << SDL_GetError() << "\n";
+        std::cout << "SDL3 Error: " << SDL_GetError() << "\n";
         return EXIT_FAILURE;
     }
 
-    SDL_Renderer *renderer = SDL_CreateRenderer(window,-1, SDL_RENDERER_PRESENTVSYNC);
+    SDL_Renderer *renderer = SDL_CreateRenderer(window,NULL);
     if(!renderer)
     {
         std::cout << "Failed to create renderer\n";
@@ -57,6 +57,8 @@ int main(int argc, char *argv[]) {
         NOW = SDL_GetPerformanceCounter();
 
         deltaTime = (double)((NOW - LAST) / (double)SDL_GetPerformanceFrequency() );
+        double fps = 1.0/deltaTime;
+        std::cout<<fps<<std::endl;
         
         SDL_SetRenderDrawColor(renderer,255,255,255,SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
@@ -69,7 +71,7 @@ int main(int argc, char *argv[]) {
             object->draw(renderer);
         }
         SDL_RenderPresent(renderer);
-        const Uint8* keys = SDL_GetKeyboardState(NULL);
+        const bool* keys = SDL_GetKeyboardState(NULL);
             if (keys[SDL_SCANCODE_W]) {
                 player.jump();
             }
@@ -82,7 +84,7 @@ int main(int argc, char *argv[]) {
             }
         while (SDL_PollEvent(&windowEvent) > 0) {
             switch(windowEvent.type) {
-                case SDL_QUIT:
+                case SDL_EVENT_QUIT:
                 keep_window_open = false;
                     break;
             }

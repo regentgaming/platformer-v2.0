@@ -106,7 +106,7 @@ void DynamicObject::update(Physics* physics,double deltaTime) {
 
     BoundingBox* hitbox = getHitbox();
     
-    velocity.setY((velocity.getY()) + ((acceleration.getY()) * deltaTime));
+    velocity.setY((velocity.getY()) + ((acceleration.getY()) * deltaTime ));
     hitbox->move(0, velocity.getY());
     detectCollisionY(this, physics);
 
