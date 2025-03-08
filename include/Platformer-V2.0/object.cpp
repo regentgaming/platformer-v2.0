@@ -31,3 +31,12 @@ void Object::draw(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer,color.getRed(),color.getGreen(),color.getBlue(),SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(renderer,&rect);
 }
+
+//returns the type of the object
+std::string Object::typeOf() {
+    return "Object";
+}
+
+bool Object::getOneWay() {
+    return isOneWay;
+}

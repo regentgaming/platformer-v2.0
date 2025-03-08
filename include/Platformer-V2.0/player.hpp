@@ -34,4 +34,10 @@ class Player : public DynamicObject {
          * @param deltaTime the length of time that passes between each frame
          */
         void update(Physics* physics,double deltaTime);
+
+        /**
+         * Returns the type of this object
+         * @return a string that is the type
+         */
+        std::string typeOf();
 };

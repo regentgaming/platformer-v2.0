@@ -8,10 +8,6 @@
  */
 class Object : public ICollidable {
     private:
-        /// the color of the Object
-        Color color;
-        /// the hitbox of the Object
-        BoundingBox hitbox;
         /// whether or not the Object is a one-way platform (W.I.P.)
         bool isOneWay;
 
@@ -48,8 +44,20 @@ class Object : public ICollidable {
         BoundingBox* getHitbox();
 
         /**
+         * Returns if the Object is one-way or not
+         * @return if the Object is one-way or not
+         */
+        bool getOneWay();
+
+        /**
          * A function that is draws the Object on the screen
          * @param renderer the SDL_Renderer pointer to the renderer that draws everything
          */
         void draw(SDL_Renderer* renderer);
+
+        /**
+         * Returns the type of this object
+         * @return a string that is the type
+         */
+        virtual std::string typeOf();
 };

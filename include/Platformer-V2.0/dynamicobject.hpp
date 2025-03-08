@@ -14,6 +14,9 @@ class DynamicObject : public Object {
         Vector2D acceleration;
         /// whether the DynamicObject is on the ground or not
         bool onGround;
+    protected:
+        // the friction the object experiences while on the ground
+        double friction;
 
     public:
         /**
@@ -36,25 +39,29 @@ class DynamicObject : public Object {
          * Handles the collisions in the Y direction
          * @param physics the Physics object to pull information from
          * @param other the other object the DynamicObject is colliding with
+         * @param type a string represeting the type passed in (used for special interactions)
          */
-        void handleCollisionY(Physics* physics, BoundingBox* other);
+        void handleCollisionY(Physics* physics, ICollidable* other, std::string type);
 
         /**
          * Handles the collisions in the X direction
          * @param physics the Physics object to pull information from
          * @param other the other object the DynamicObject is colliding with
+         * @param type a string represeting the type passed in (used for special interactions)
          */
-        void handleCollisionX(Physics* physics, BoundingBox* other);
+        void handleCollisionX(Physics* physics, ICollidable* other, std::string type);
 
         /**
          * A function called by DynamicObject::update to check if an object is colliding with anything in the Y direction
          * @param dynamic the object to check collision of (usually ```this``` is passed in)
+         * @param physics the Physics object to pull information from
          */
         void detectCollisionY(ICollidable* dynamic, Physics* physics);
 
         /**
          * A function called by DynamicObject::update to check if an object is colliding with anything in the X direction
          * @param dynamic the object to check collision of (usually ```this``` is passed in)
+         * @param physics the Physics object to pull information from
          */
         void detectCollisionX(ICollidable* dynamic, Physics* physics);
 
@@ -81,4 +88,10 @@ class DynamicObject : public Object {
          * @param val the new value to set the flag too
          */
         void setOnGround(bool val);
+
+        /**
+         * Returns the type of this object
+         * @return a string that is the type
+         */
+        virtual std::string typeOf();
 };

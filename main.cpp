@@ -24,6 +24,8 @@ int main(int argc, char *argv[]) {
     SDL_Init(SDL_INIT_EVENTS);
 
     SDL_Window *window = SDL_CreateWindow("Game", WIDTH, HEIGHT, SDL_WINDOW_HIGH_PIXEL_DENSITY  | SDL_WINDOW_RESIZABLE);
+
+    // SDL_SetWindowSurfaceVSync(window,1);
     
     SDL_Event windowEvent;
 
@@ -34,6 +36,7 @@ int main(int argc, char *argv[]) {
     }
 
     SDL_Renderer *renderer = SDL_CreateRenderer(window,NULL);
+    SDL_SetRenderVSync(renderer,1);
     if(!renderer)
     {
         std::cout << "Failed to create renderer\n";
@@ -47,6 +50,7 @@ int main(int argc, char *argv[]) {
     bool keep_window_open = true;
     Physics physics = Physics();
     Object test = Object(Color(0,255,0),BoundingBox(-50,500,100,900),&physics,false);
+    Object test2 = Object(Color(0,0,255),BoundingBox(100,450,25,100),&physics,true);
     Player player = Player(Color(255,0,0),BoundingBox(300,100,50,50),&physics);
     DynamicObject test3 = DynamicObject(Color(0,0,255),BoundingBox(375,50,50,50),&physics);
     Uint64 NOW = SDL_GetPerformanceCounter();
@@ -58,7 +62,6 @@ int main(int argc, char *argv[]) {
 
         deltaTime = (double)((NOW - LAST) / (double)SDL_GetPerformanceFrequency() );
         double fps = 1.0/deltaTime;
-        std::cout<<fps<<std::endl;
         
         SDL_SetRenderDrawColor(renderer,255,255,255,SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);

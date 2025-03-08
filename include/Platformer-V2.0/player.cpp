@@ -4,7 +4,9 @@
 #define MOVE_FORCE 300
 
 //public constructor for building a Player object
-Player::Player(Color color_p, BoundingBox hitbox_p, Physics* physics) : DynamicObject::DynamicObject(color_p, hitbox_p, physics) {}
+Player::Player(Color color_p, BoundingBox hitbox_p, Physics* physics) : DynamicObject::DynamicObject(color_p, hitbox_p, physics) {
+    friction = 10;
+}
 
 //function that makes the Player jump
 void Player::jump() {
@@ -28,4 +30,9 @@ void Player::move(int dir) {
 //update function for each frame
 void Player::update(Physics* physics,double deltaTime) {
     DynamicObject::update(physics, deltaTime);
+}
+
+//returns the type of the object
+std::string Player::typeOf() {
+    return "Player";
 }

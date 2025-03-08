@@ -1,5 +1,6 @@
 #include "dynamicobject.hpp"
 #include <cmath>
+#include <iostream>
 
 //TODO: Fix these so they make sense
 #define MAX_VEL_X 200
@@ -11,6 +12,7 @@ DynamicObject::DynamicObject(Color color_p, BoundingBox hitbox_p, Physics* physi
     physics->addDynamic(this);
     velocity = Vector2D(0,0);
     acceleration = Vector2D(0,0);
+    friction = FRICTION;
     onGround = false;
 }
 
@@ -34,16 +36,12 @@ void DynamicObject::setOnGround(bool val) {
     onGround = val;
 }
 
-//right now these two functions ignore if the static object is a one-way platform or not (only collidable from above, can walk through sides or jump up through it)
-//also dynamic objects are unable to be pushed right now
-//will be remedied soon^tm
-
 //detects collisions in the y direction
 void DynamicObject::detectCollisionY(ICollidable* dynamic, Physics* physics) {
     onGround = false;
     for (ICollidable* barrier : physics->getStatics()) {
-        if (((Object*)barrier)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) { //i apologise for the sin of all this casting
-            ((DynamicObject*)dynamic)->handleCollisionY(physics,((Object*)barrier)->getHitbox());
+        if ((barrier)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) { //i apologise for the sin of all this casting
+            ((DynamicObject*)dynamic)->handleCollisionY(physics,(barrier),((Object*)barrier)->typeOf());
         }
     }
     for (ICollidable* other : physics->getDynamics()) {
@@ -51,7 +49,7 @@ void DynamicObject::detectCollisionY(ICollidable* dynamic, Physics* physics) {
             continue;
         }
         if (((DynamicObject*)other)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) { //i apologise for the sin of all this casting
-            ((DynamicObject*)dynamic)->handleCollisionY(physics,((DynamicObject*)other)->getHitbox());
+            ((DynamicObject*)dynamic)->handleCollisionY(physics,(other),((DynamicObject*)other)->typeOf());
         }
     }
 }
@@ -59,42 +57,68 @@ void DynamicObject::detectCollisionY(ICollidable* dynamic, Physics* physics) {
 //detects collisions in the x direction
 void DynamicObject::detectCollisionX(ICollidable* dynamic, Physics* physics) {
     for (ICollidable* barrier : physics->getStatics()) {
-        if (((Object*)barrier)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) { //i apologise for the sin of all this casting
-            ((DynamicObject*)dynamic)->handleCollisionX(physics,((Object*)barrier)->getHitbox());
+        if (((Object*)barrier)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) {
+            ((DynamicObject*)dynamic)->handleCollisionX(physics,(barrier),((Object*)barrier)->typeOf());
         }
     }
     for (ICollidable* other : physics->getDynamics()) {
         if (other == dynamic) {
             continue;
         }
-        if (((DynamicObject*)other)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) { //i apologise for the sin of all this casting
-            ((DynamicObject*)dynamic)->handleCollisionX(physics,((DynamicObject*)other)->getHitbox());
+        if (((DynamicObject*)other)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) {
+            ((DynamicObject*)dynamic)->handleCollisionX(physics,(other),(*(DynamicObject*)other).typeOf());
         }
     }
 }
 
 //handles collisions in the y direction
-void DynamicObject::handleCollisionY(Physics* physics, BoundingBox* other) {
+void DynamicObject::handleCollisionY(Physics* physics, ICollidable* other, std::string type) {
     BoundingBox* hitbox = getHitbox();
+    bool isStatic = type == "Object";
+    bool oneWay = false;
+    if (isStatic) {
+        if (((Object*)other)->getOneWay()) {
+            oneWay = true;
+        }
+    }
     if ((velocity.getY()) > 0.0) {
-        hitbox->move(0,(other->UL.getY()) - (hitbox->LR.getY()));
+        hitbox->move(0,(other->getHitbox()->UL.getY()) - (hitbox->LR.getY()));
         velocity.setY(0);
         onGround = true;
-    } else if ((velocity.getY()) < 0.0) {
-        hitbox->move(0,(other->LR.getY() - hitbox->UL.getY()));
+    } else if (((velocity.getY()) < 0.0 && !oneWay)) {
+        hitbox->move(0,(other->getHitbox()->LR.getY() - hitbox->UL.getY()));
         velocity.setY(velocity.getY() * -1);
     }
 }
 
 //handles collisions in the y direction
-void DynamicObject::handleCollisionX(Physics* physics, BoundingBox* other) {
+void DynamicObject::handleCollisionX(Physics* physics, ICollidable* other, std::string type) {
     BoundingBox* hitbox = getHitbox();
-    if ((velocity.getX()) > 0.0) {
-        hitbox->move(other->UL.getX() - hitbox->LR.getX(),0);
-        velocity.setX(0);
-    } else if ((velocity.getX()) < 0.0) {
-        hitbox->move(other->LR.getX() - hitbox->UL.getX(),0);
-        velocity.setX(0);
+    bool isDynamic = type == "DynamicObject";
+    bool isStatic = type == "Object";
+    bool oneWay = false;
+    if (isStatic) {
+        if (((Object*)other)->getOneWay()) {
+            oneWay = true;
+        }
+    }
+    if (!oneWay || oneWay && velocity.getY() > 0) {
+        if ((velocity.getX()) > 0.0) {
+            hitbox->move(other->getHitbox()->UL.getX() - hitbox->LR.getX(),0);
+            if (isDynamic) {
+                ((DynamicObject*)other)->getVelocity()->setX(velocity.getX());
+            } else {
+                velocity.setX(0);
+            }
+            
+        } else if ((velocity.getX()) < 0.0) {
+            hitbox->move(other->getHitbox()->LR.getX() - hitbox->UL.getX(),0);
+            if (isDynamic) {
+                ((DynamicObject*)other)->getVelocity()->setX(velocity.getX());
+            } else {
+                velocity.setX(0);
+            }
+        }
     }
 }
 
@@ -129,9 +153,14 @@ void DynamicObject::update(Physics* physics,double deltaTime) {
         velocity.setX(-1 * MAX_VEL_X);
     }
     if (acceleration.getX() == 0 && onGround) {
-        velocity.setX(velocity.getX() + velocity.getX() * -1 * FRICTION * deltaTime);
+        velocity.setX(velocity.getX() + velocity.getX() * -1 * friction * deltaTime);
         if (fabs(velocity.getX()) < 0.01) {
             velocity.setX(0);
         }
     }
+}
+
+//returns the type of the object
+std::string DynamicObject::typeOf() {
+    return "DynamicObject";
 }
