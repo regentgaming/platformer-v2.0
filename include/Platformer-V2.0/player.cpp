@@ -2,10 +2,11 @@
 
 #define JUMP_FORCE -300
 #define MOVE_FORCE 300
+#define FRICTION 10
 
 //public constructor for building a Player object
 Player::Player(Color color_p, BoundingBox hitbox_p, Physics* physics) : DynamicObject::DynamicObject(color_p, hitbox_p, physics) {
-    friction = 10;
+    friction = FRICTION;
 }
 
 //function that makes the Player jump
