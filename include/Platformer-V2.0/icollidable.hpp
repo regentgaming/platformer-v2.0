@@ -1,4 +1,7 @@
-#pragma once
+#ifndef ICOLLIDABLE_H
+#define ICOLLIDABLE_H
+
+
 #include "SDL3/SDL.h"
 #include <string>
 #include "util.hpp"
@@ -27,3 +30,5 @@ class ICollidable {
          */
         virtual BoundingBox* getHitbox() = 0;
 };
+
+#endif

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "include/SDL3/SDL.h"
-#include "include/Platformer-V2.0/player.hpp"
+#include "include/Platformer-V2.0/default_player_controller.hpp"
 
 /* 
 * helper function for wrapping things around the screen
@@ -18,6 +18,74 @@ void screenWrap(DynamicObject* dynamic, const int w, const int h) {
         hitbox->moveTo(hitbox->UL.getX(),0-hitbox->h);
     }
 }
+
+
+//test for inheriting from defaultplayer and defaultcontroller
+class myPlayer : public DefaultPlayer {
+    int dashSpeed;
+    bool canDash;
+    public:
+        myPlayer(Color color_p, BoundingBox hitbox_p, Physics* physics, int dashSpeed_p) : DefaultPlayer(color_p, hitbox_p, physics){
+            dashSpeed = dashSpeed_p;
+        };
+
+        void dash(int dir) {
+            if (!canDash) {
+                return;
+            } else if (dir > 0) {
+                canDash = false;
+                getVelocity()->setX(dashSpeed);
+            } else if (dir < 0) {
+                canDash = false;
+                getVelocity()->setX(-1 * dashSpeed);
+            }
+        }
+
+        void update(Physics* physics, double deltaTime) {
+            DefaultPlayer::update(physics, deltaTime);
+
+            if (isOnGround()) {
+                canDash = true;
+            }
+
+        }
+
+
+        std::string typeOf() {
+            return "myPlayer";
+        }
+};
+
+class myController : public DefaultPlayerController {
+    private:
+        SDL_Scancode dashButton = BUTTON(LSHIFT);
+    public:
+        SDL_Scancode getDashButton() {
+            return dashButton;
+        }
+
+        void setDashButton(SDL_Scancode button) {
+            dashButton = button;
+        }
+
+        void checkMovement(const bool* keys, DefaultPlayer* player) {
+            DefaultPlayerController::checkMovement(keys, player);
+            if (keys[getDashButton()]) {
+                if (player->typeOf() == "myPlayer") {
+                    if (keys[getMoveLeftButton()]){
+                        ((myPlayer*)player)->dash(-1);
+                    } else if (keys[getMoveRightButton()]) {
+                        ((myPlayer*)player)->dash(1);
+                    }
+                }
+                
+            }
+        }
+};
+
+
+
+
 
 int main(int argc, char *argv[]) {
     const int WIDTH = 800, HEIGHT = 600;
@@ -51,7 +119,11 @@ int main(int argc, char *argv[]) {
     Physics physics = Physics();
     Object test = Object(Color(0,255,0),BoundingBox(-50,500,100,900),&physics,false);
     Object test2 = Object(Color(0,0,255),BoundingBox(100,450,25,100),&physics,true);
-    Player player = Player(Color(255,0,0),BoundingBox(300,100,50,50),&physics);
+    myPlayer player = myPlayer(Color(255,0,0),BoundingBox(300,100,50,50),&physics,450);
+    myController controller = myController();
+    controller.setJumpButton(BUTTON(SPACE));
+    controller.setMoveLeftButton(BUTTON(LEFT));
+    controller.setMoveRightButton(BUTTON(RIGHT));
     DynamicObject test3 = DynamicObject(Color(0,0,255),BoundingBox(375,50,50,50),&physics);
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
@@ -75,16 +147,7 @@ int main(int argc, char *argv[]) {
         }
         SDL_RenderPresent(renderer);
         const bool* keys = SDL_GetKeyboardState(NULL);
-            if (keys[SDL_SCANCODE_W]) {
-                player.jump();
-            }
-            if (keys[SDL_SCANCODE_A]) {
-                player.move(-1);
-            } else if (keys[SDL_SCANCODE_D]) {
-                player.move(1);
-            } else {
-                player.move(0);
-            }
+        controller.checkMovement(keys,&player);
         while (SDL_PollEvent(&windowEvent) > 0) {
             switch(windowEvent.type) {
                 case SDL_EVENT_QUIT:

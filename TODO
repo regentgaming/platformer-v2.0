@@ -1,3 +1,5 @@
-Updated TODO 3/7/2025:
+Updated TODO 3/20/2025:
 
-Create controller class to have customizable controls for the player
+Create controller class to have customizable controls for the player: DONE
+Swap all #pragma once uses to the C style include guards: WIP
+Create one main header file to include that includes everything needed: Not Started

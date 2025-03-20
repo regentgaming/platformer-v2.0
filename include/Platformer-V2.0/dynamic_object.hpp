@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DYNAMIC_OBJECT_H
+#define DYNAMIC_OBJECT_H
+
 #include "object.hpp"
 
 /**
@@ -17,6 +19,8 @@ class DynamicObject : public Object {
     protected:
         // the friction the object experiences while on the ground
         double friction;
+        // the friction the object experiences while in the air
+        double air_res;
 
     public:
         /**
@@ -95,3 +99,5 @@ class DynamicObject : public Object {
          */
         virtual std::string typeOf();
 };
+
+#endif

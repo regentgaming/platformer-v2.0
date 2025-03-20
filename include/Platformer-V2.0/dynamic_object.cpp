@@ -1,4 +1,4 @@
-#include "dynamicobject.hpp"
+#include "dynamic_object.hpp"
 #include <cmath>
 #include <iostream>
 
@@ -13,6 +13,7 @@ DynamicObject::DynamicObject(Color color_p, BoundingBox hitbox_p, Physics* physi
     velocity = Vector2D(0,0);
     acceleration = Vector2D(0,0);
     friction = FRICTION;
+    air_res = friction * 0.1;
     onGround = false;
 }
 
@@ -124,7 +125,6 @@ void DynamicObject::handleCollisionX(Physics* physics, ICollidable* other, std::
 
 //update function for each frame
 void DynamicObject::update(Physics* physics,double deltaTime) {
-    // onGround = false;
     if (!onGround) {
         (acceleration.setY(physics->gravity));
     } else {
@@ -137,6 +137,12 @@ void DynamicObject::update(Physics* physics,double deltaTime) {
     hitbox->move(0, velocity.getY() * deltaTime);
     detectCollisionY(this, physics);
 
+    if ((velocity.getX()) > MAX_VEL_X) {
+        acceleration.setX(0);
+    } else if ((velocity.getX()) < (MAX_VEL_X * -1)) {
+        acceleration.setX(0);
+    }
+
     velocity.setX((velocity.getX()) + ((acceleration.getX()) * deltaTime));
     hitbox->move(velocity.getX() * deltaTime, 0);
     detectCollisionX(this, physics);
@@ -147,13 +153,14 @@ void DynamicObject::update(Physics* physics,double deltaTime) {
         velocity.setY(-1 * MAX_VEL_Y);
     }
 
-    if ((velocity.getX()) > MAX_VEL_X) {
-        velocity.setX(MAX_VEL_X);
-    } else if ((velocity.getX()) < (MAX_VEL_X * -1)) {
-        velocity.setX(-1 * MAX_VEL_X);
-    }
+    
     if (acceleration.getX() == 0 && onGround) {
         velocity.setX(velocity.getX() + velocity.getX() * -1 * friction * deltaTime);
+        if (fabs(velocity.getX()) < 0.01) {
+            velocity.setX(0);
+        }
+    } else if (acceleration.getX() == 0 && !onGround) {
+        velocity.setX(velocity.getX() + velocity.getX() * -1 * air_res * deltaTime);
         if (fabs(velocity.getX()) < 0.01) {
             velocity.setX(0);
         }

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef UTIL_H
+#define UTIL_H
+
 #include "SDL3/SDL.h"
 
 
@@ -204,3 +206,5 @@ class Color {
             return green;
         }
 };
+
+#endif
