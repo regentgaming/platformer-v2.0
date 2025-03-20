@@ -1,7 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "physics.hpp"
+#include <Platformer-V2.0/physics.hpp>
 
 /**
  * The class to represent static objects and the base class for DynamicObject

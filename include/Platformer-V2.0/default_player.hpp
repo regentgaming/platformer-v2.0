@@ -2,7 +2,7 @@
 #define DEFAULT_PLAYER_H
 
 
-#include "dynamic_object.hpp"
+#include <Platformer-V2.0/dynamic_object.hpp>
 
 /**
  * Represents the special DynamicObject that the player controls

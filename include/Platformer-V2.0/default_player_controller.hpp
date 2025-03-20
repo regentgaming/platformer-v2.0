@@ -1,8 +1,8 @@
 #ifndef DEFAULT_PLAYER_CONTROLLER_H
 #define DEFAULT_PLAYER_CONTROLLER_H
 
-#include "SDL3/SDL_scancode.h"
-#include "default_player.hpp"
+#include <SDL3/SDL_scancode.h>
+#include <Platformer-V2.0/default_player.hpp>
 
 #define BUTTON(x) SDL_SCANCODE_##x
 

@@ -1,8 +1,8 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
-#include "icollidable.hpp"
-#include "util.hpp"
+#include <Platformer-V2.0/icollidable.hpp>
+#include <Platformer-V2.0/util.hpp>
 #include <vector>
 
 /**

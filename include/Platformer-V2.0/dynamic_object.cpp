@@ -1,8 +1,7 @@
-#include "dynamic_object.hpp"
+#include <Platformer-V2.0/dynamic_object.hpp>
 #include <cmath>
 #include <iostream>
 
-//TODO: Fix these so they make sense
 #define MAX_VEL_X 200
 #define MAX_VEL_Y 500
 #define FRICTION 5

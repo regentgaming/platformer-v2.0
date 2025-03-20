@@ -1,4 +1,4 @@
-#include "default_player.hpp"
+#include <Platformer-V2.0/default_player.hpp>
 
 #define JUMP_FORCE -300
 #define MOVE_FORCE 300

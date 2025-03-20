@@ -1,4 +1,4 @@
-#include "default_player_controller.hpp"
+#include <Platformer-V2.0/default_player_controller.hpp>
 
 SDL_Scancode DefaultPlayerController::getJumpButton() {
     return jumpButton;

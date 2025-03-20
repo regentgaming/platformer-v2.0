@@ -1,7 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include "SDL3/SDL.h"
+#include <SDL3/SDL.h>
 
 
 

@@ -1,4 +1,4 @@
-#include "object.hpp"
+#include <Platformer-V2.0/object.hpp>
 
 //the public constructor for building an Object
 Object::Object(Color color_p, BoundingBox hitbox_p, Physics* physics, bool isOneWay_p) {

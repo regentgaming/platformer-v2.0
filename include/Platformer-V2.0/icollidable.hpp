@@ -2,9 +2,9 @@
 #define ICOLLIDABLE_H
 
 
-#include "SDL3/SDL.h"
+#include <SDL3/SDL.h>
 #include <string>
-#include "util.hpp"
+#include <Platformer-V2.0/util.hpp>
 
 /**
  * An interface class used to represent all objects inside the Physics class

@@ -1,7 +1,7 @@
 #ifndef DYNAMIC_OBJECT_H
 #define DYNAMIC_OBJECT_H
 
-#include "object.hpp"
+#include <Platformer-V2.0/object.hpp>
 
 /**
  * Represents all Objects that are affected by physics and are able to move

@@ -1,4 +1,4 @@
-#include "physics.hpp"
+#include <Platformer-V2.0/physics.hpp>
 
 //adds an Object to the statics list
 void Physics::addStatic(ICollidable* object) {
