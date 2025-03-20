@@ -1,6 +1,6 @@
 #include <iostream>
 #include "include/SDL3/SDL.h"
-#include "include/Platformer-V2.0/default_player_controller.hpp"
+#include "include/Platformer-V2.0/platformer_v2-0.hpp"
 
 /* 
 * helper function for wrapping things around the screen
