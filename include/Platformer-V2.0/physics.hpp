@@ -20,29 +20,27 @@ class Physics {
 
         /**
          * Adds an ICollidable object to the list of static objects.
-         * If the list has nothing in it, instantiates the list
          * @param object The object to be added
          */
-        void addStatic(ICollidable* object);
+        void addStatic(ICollidable& object);
 
         /**
          * Adds an ICollidable object to the list of dynamic objects.
-         * If the list has nothing in it, instantiates the list
          * @param object The object to be added
          */
-        void addDynamic(ICollidable* object);
+        void addDynamic(ICollidable& object);
 
         /**
          * Returns the static object vector
          * @return the static object vector
          */
-        std::vector<ICollidable*> getStatics();
+        const std::vector<ICollidable*>& getStatics() const;
 
         /**
          * Returns the dynamic object vector
          * @return the dynamic object vector
          */
-        std::vector<ICollidable*> getDynamics();
+        const std::vector<ICollidable*>& getDynamics() const;
 };
 
 #endif

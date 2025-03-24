@@ -5,7 +5,7 @@
 #define FRICTION 10
 
 //public constructor for building a DefaultPlayer object
-DefaultPlayer::DefaultPlayer(Color color_p, BoundingBox hitbox_p, Physics* physics) : DynamicObject::DynamicObject(color_p, hitbox_p, physics) {
+DefaultPlayer::DefaultPlayer(Color color_p, BoundingBox hitbox_p, Physics& physics) : DynamicObject::DynamicObject(color_p, hitbox_p, physics) {
     friction = FRICTION;
 }
 
@@ -13,27 +13,22 @@ DefaultPlayer::DefaultPlayer(Color color_p, BoundingBox hitbox_p, Physics* physi
 void DefaultPlayer::jump() {
     if (isOnGround()) {
         setOnGround(false);
-        (getVelocity()->setY((getVelocity()->getY()) + JUMP_FORCE));
+        setVelocity(getVelocity().getX(), getVelocity().getY() + JUMP_FORCE);
     }
 }
 
 //function that makes the DefaultPlayer move
 void DefaultPlayer::move(int dir) {
     if (dir > 0) {
-        (getAcceleration()->setX(MOVE_FORCE));
+        setAcceleration(MOVE_FORCE, getAcceleration().getY());
     } else if (dir < 0) {
-        (getAcceleration()->setX(-1 * MOVE_FORCE));
+        setAcceleration(-1 * MOVE_FORCE, getAcceleration().getY());
     } else {
-        (getAcceleration()->setX(0));
+        setAcceleration(0, getAcceleration().getY());
     }
 }
 
 //update function for each frame
-void DefaultPlayer::update(Physics* physics,double deltaTime) {
+void DefaultPlayer::update(Physics& physics,double deltaTime) {
     DynamicObject::update(physics, deltaTime);
-}
-
-//returns the type of the object
-std::string DefaultPlayer::typeOf() {
-    return "Player";
 }

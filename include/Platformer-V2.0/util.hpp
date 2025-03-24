@@ -37,7 +37,7 @@ class Vector2D {
          * Returns the x component of the vector
          * @return the x value
          */
-        double getX() {return x;}
+        double getX() const {return x;}
 
         /**
          * Sets the x component of the vector
@@ -51,7 +51,7 @@ class Vector2D {
          * Returns the y component of the vector
          * @return the y value
          */
-        double getY() {return y;}
+        double getY() const {return y;}
 
 
         /**
@@ -87,8 +87,8 @@ class BoundingBox {
          * @return a BoundingBox object
          */
         BoundingBox(double x, double y, double height, double width) {
-            UL = Vector2D(x,y);
-            LR = Vector2D(x+width,y+height);
+            UL = Vector2D(x, y);
+            LR = Vector2D(x+width, y+height);
             h = height;
             w = width;
         }
@@ -105,8 +105,8 @@ class BoundingBox {
          * @param other the other BoundingBox to check collision against
          * @return true if the 2 BoundingBoxes are colliding, false otherwise
          */
-        bool isIntersecting(BoundingBox* other) {
-            return (LR.getX() > other->UL.getX() && other->LR.getX() > UL.getX()) && (LR.getY() > other->UL.getY() && other->LR.getY() > UL.getY());
+        bool isIntersecting(BoundingBox& other) {
+            return (LR.getX() > other.UL.getX() && other.LR.getX() > UL.getX()) && (LR.getY() > other.UL.getY() && other.LR.getY() > UL.getY());
         }
 
         /**
@@ -186,7 +186,7 @@ class Color {
          * Returns the red value
          * @return the red value
          */
-        int getRed() {
+        int getRed() const {
             return red;
         }
 
@@ -194,7 +194,7 @@ class Color {
          * Returns the blue value
          * @return the blue value
          */
-        int getBlue() {
+        int getBlue() const {
             return blue;
         }
 
@@ -202,7 +202,7 @@ class Color {
          * Returns the green value
          * @return the green value
          */
-        int getGreen() {
+        int getGreen() const {
             return green;
         }
 };

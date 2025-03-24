@@ -7,27 +7,39 @@
 #define FRICTION 5
 
 //the public constructor for building a DynamicObject
-DynamicObject::DynamicObject(Color color_p, BoundingBox hitbox_p, Physics* physics) : Object::Object(color_p, hitbox_p) {
-    physics->addDynamic(this);
-    velocity = Vector2D(0,0);
-    acceleration = Vector2D(0,0);
+DynamicObject::DynamicObject(Color color_p, BoundingBox hitbox_p, Physics& physics) : Object::Object(color_p, hitbox_p) {
+    physics.addDynamic(*this);
+    velocity = Vector2D(0, 0);
+    acceleration = Vector2D(0, 0);
     friction = FRICTION;
     air_res = friction * 0.1;
     onGround = false;
 }
 
 //returns the velocity
-Vector2D* DynamicObject::getVelocity() {
-    return &velocity;
+const Vector2D& DynamicObject::getVelocity() const {
+    return velocity;
+}
+
+//sets velocity
+void DynamicObject::setVelocity(double x, double y) {
+    velocity.setX(x);
+    velocity.setY(y);
 }
 
 //returns the acceleration
-Vector2D* DynamicObject::getAcceleration() {
-    return &acceleration;
+const Vector2D& DynamicObject::getAcceleration() const{
+    return acceleration;
+}
+
+//sets acceleration
+void DynamicObject::setAcceleration(double x, double y) {
+    acceleration.setX(x);
+    acceleration.setY(y);
 }
 
 //returns if it is on the ground or not
-bool DynamicObject::isOnGround() {
+bool DynamicObject::isOnGround() const {
     return onGround;
 }
 
@@ -36,137 +48,134 @@ void DynamicObject::setOnGround(bool val) {
     onGround = val;
 }
 
-//detects collisions in the y direction
-void DynamicObject::detectCollisionY(ICollidable* dynamic, Physics* physics) {
-    onGround = false;
-    for (ICollidable* barrier : physics->getStatics()) {
-        if ((barrier)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) { //i apologise for the sin of all this casting
-            ((DynamicObject*)dynamic)->handleCollisionY(physics,(barrier),((Object*)barrier)->typeOf());
-        }
-    }
-    for (ICollidable* other : physics->getDynamics()) {
-        if (other == dynamic) {
-            continue;
-        }
-        if (((DynamicObject*)other)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) { //i apologise for the sin of all this casting
-            ((DynamicObject*)dynamic)->handleCollisionY(physics,(other),((DynamicObject*)other)->typeOf());
-        }
+//handles collisions
+void DynamicObject::handleCollision(DynamicObject& dynamic, Physics& physics, bool isYAxis, ICollidable& other) {
+    if (isYAxis) {
+        dynamic.handleCollisionY(physics, other);
+    } else {
+        dynamic.handleCollisionX(physics, other);
     }
 }
 
-//detects collisions in the x direction
-void DynamicObject::detectCollisionX(ICollidable* dynamic, Physics* physics) {
-    for (ICollidable* barrier : physics->getStatics()) {
-        if (((Object*)barrier)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) {
-            ((DynamicObject*)dynamic)->handleCollisionX(physics,(barrier),((Object*)barrier)->typeOf());
+//detects collisions
+void DynamicObject::detectCollision(DynamicObject& dynamic, Physics& physics, bool isYAxis) const {
+    if (isYAxis) {dynamic.onGround = false;};
+    //check if colliding with any static object
+    for (ICollidable* barrier : physics.getStatics()) {
+        if ((*barrier).getHitbox().isIntersecting(dynamic.getHitbox())) {
+            dynamic.handleCollision(dynamic, physics, isYAxis, *barrier);
         }
     }
-    for (ICollidable* other : physics->getDynamics()) {
-        if (other == dynamic) {
+    //check if colliding with any dynamic object
+    for (ICollidable* other : physics.getDynamics()) {
+        if (other == &dynamic) { //make sure its not colliding with itself
             continue;
         }
-        if (((DynamicObject*)other)->getHitbox()->isIntersecting(((DynamicObject*)dynamic)->getHitbox())) {
-            ((DynamicObject*)dynamic)->handleCollisionX(physics,(other),(*(DynamicObject*)other).typeOf());
+        if ((*other).getHitbox().isIntersecting(dynamic.getHitbox())) {
+            dynamic.handleCollision(dynamic, physics, isYAxis, *other);
         }
     }
 }
 
 //handles collisions in the y direction
-void DynamicObject::handleCollisionY(Physics* physics, ICollidable* other, std::string type) {
-    BoundingBox* hitbox = getHitbox();
-    bool isStatic = type == "Object";
-    bool oneWay = false;
-    if (isStatic) {
-        if (((Object*)other)->getOneWay()) {
-            oneWay = true;
-        }
-    }
-    if ((velocity.getY()) > 0.0) {
-        hitbox->move(0,(other->getHitbox()->UL.getY()) - (hitbox->LR.getY()));
+void DynamicObject::handleCollisionY(Physics& physics, ICollidable& other) {
+    BoundingBox& hitbox = getHitbox();
+    bool oneWay = other.getOneWay();
+
+    //checks what side it hit from, and then moves it out of the object towards that side
+    if (velocity.getY() > 0.0) {
+        hitbox.move(0, other.getHitbox().UL.getY() - hitbox.LR.getY());
         velocity.setY(0);
         onGround = true;
-    } else if (((velocity.getY()) < 0.0 && !oneWay)) {
-        hitbox->move(0,(other->getHitbox()->LR.getY() - hitbox->UL.getY()));
+    //if object is one way, ignore bottom collisions
+    } else if ((velocity.getY() < 0.0 && !oneWay)) {
+        hitbox.move(0, other.getHitbox().LR.getY() - hitbox.UL.getY());
         velocity.setY(velocity.getY() * -1);
     }
 }
 
-//handles collisions in the y direction
-void DynamicObject::handleCollisionX(Physics* physics, ICollidable* other, std::string type) {
-    BoundingBox* hitbox = getHitbox();
-    bool isDynamic = type == "DynamicObject";
-    bool isStatic = type == "Object";
-    bool oneWay = false;
-    if (isStatic) {
-        if (((Object*)other)->getOneWay()) {
-            oneWay = true;
+//handles collisions in the x direction
+void DynamicObject::handleCollisionX(Physics& physics, ICollidable& other) {
+    BoundingBox& hitbox = getHitbox();
+    bool oneWay = other.getOneWay();
+
+    //checks what side it hit from, and then moves it out of the object towards that side
+    //if object is one way, ignore side collisions while on ground
+    if (!oneWay || oneWay && velocity.getY() > 0) {
+        if (velocity.getX() > 0.0) {
+            hitbox.move(other.getHitbox().UL.getX() - hitbox.LR.getX(), 0);
+        } else if (velocity.getX() < 0.0) {
+            hitbox.move(other.getHitbox().LR.getX() - hitbox.UL.getX(), 0);
+        }
+
+        DynamicObject& dyn = dynamic_cast<DynamicObject&>(other);
+        if (&dyn) {
+            dyn.setVelocity(velocity.getX(), dyn.getVelocity().getY());
+        } else {
+            velocity.setX(0);
         }
     }
-    if (!oneWay || oneWay && velocity.getY() > 0) {
-        if ((velocity.getX()) > 0.0) {
-            hitbox->move(other->getHitbox()->UL.getX() - hitbox->LR.getX(),0);
-            if (isDynamic) {
-                ((DynamicObject*)other)->getVelocity()->setX(velocity.getX());
-            } else {
-                velocity.setX(0);
-            }
-            
-        } else if ((velocity.getX()) < 0.0) {
-            hitbox->move(other->getHitbox()->LR.getX() - hitbox->UL.getX(),0);
-            if (isDynamic) {
-                ((DynamicObject*)other)->getVelocity()->setX(velocity.getX());
-            } else {
-                velocity.setX(0);
-            }
+}
+
+//helper function to apply gravity
+void DynamicObject::applyGravity(Physics& physics) {
+    if (!isOnGround()) {
+        setAcceleration(getAcceleration().getX(), physics.gravity);
+    } else {
+        setAcceleration(getAcceleration().getX(), 0);
+    }
+}
+
+//helper function to clamp the velocity
+void DynamicObject::clampVelocity() {
+    if (fabs(getVelocity().getX()) > MAX_VEL_X) {
+        setAcceleration(0, getAcceleration().getY());
+    }
+
+    if (getVelocity().getY() > MAX_VEL_Y) {
+        setVelocity(getVelocity().getX(), MAX_VEL_Y);
+    } else if (getVelocity().getY() < (MAX_VEL_Y * -1)) {
+        setVelocity(getVelocity().getX(), -1 * MAX_VEL_Y);
+    }
+}
+
+//helper function to apply friction
+void DynamicObject::applyFriction(double deltaTime) {
+    double resistance = onGround ? friction : air_res;
+    if (acceleration.getX() == 0) {
+        velocity.setX(velocity.getX() + velocity.getX() * -1 * resistance * deltaTime);
+        if (fabs(velocity.getX()) < 0.01) {
+            velocity.setX(0);
         }
+    }
+}
+
+//helper function to update the position
+void DynamicObject::updatePosition(bool isYAxis, double deltaTime) {
+    if (isYAxis) {
+        velocity.setY(velocity.getY() + (acceleration.getY() * deltaTime ));
+        hitbox.move(0, velocity.getY() * deltaTime);
+    } else {
+        velocity.setX(velocity.getX() + (acceleration.getX() * deltaTime));
+        hitbox.move(velocity.getX() * deltaTime, 0);
     }
 }
 
 //update function for each frame
-void DynamicObject::update(Physics* physics,double deltaTime) {
-    if (!onGround) {
-        (acceleration.setY(physics->gravity));
-    } else {
-        (acceleration.setY(0));
-    }
+void DynamicObject::update(Physics& physics, double deltaTime) {
+    applyGravity(physics);
 
-    BoundingBox* hitbox = getHitbox();
+    //update vertical position and collisions
+    updatePosition(true, deltaTime);
+    detectCollision(*this, physics, true);
+
+    //update horizontal position and collisions
+    updatePosition(false, deltaTime);
+    detectCollision(*this, physics, false);
     
-    velocity.setY((velocity.getY()) + ((acceleration.getY()) * deltaTime ));
-    hitbox->move(0, velocity.getY() * deltaTime);
-    detectCollisionY(this, physics);
+    //ensure velocity stays in bounds
+    clampVelocity();
 
-    if ((velocity.getX()) > MAX_VEL_X) {
-        acceleration.setX(0);
-    } else if ((velocity.getX()) < (MAX_VEL_X * -1)) {
-        acceleration.setX(0);
-    }
-
-    velocity.setX((velocity.getX()) + ((acceleration.getX()) * deltaTime));
-    hitbox->move(velocity.getX() * deltaTime, 0);
-    detectCollisionX(this, physics);
-
-    if ((velocity.getY()) > MAX_VEL_Y) {
-        velocity.setY(MAX_VEL_Y);
-    } else if ((velocity.getY()) < (MAX_VEL_Y * -1)) {
-        velocity.setY(-1 * MAX_VEL_Y);
-    }
-
-    
-    if (acceleration.getX() == 0 && onGround) {
-        velocity.setX(velocity.getX() + velocity.getX() * -1 * friction * deltaTime);
-        if (fabs(velocity.getX()) < 0.01) {
-            velocity.setX(0);
-        }
-    } else if (acceleration.getX() == 0 && !onGround) {
-        velocity.setX(velocity.getX() + velocity.getX() * -1 * air_res * deltaTime);
-        if (fabs(velocity.getX()) < 0.01) {
-            velocity.setX(0);
-        }
-    }
-}
-
-//returns the type of the object
-std::string DynamicObject::typeOf() {
-    return "DynamicObject";
+    //apply friction
+    applyFriction(deltaTime);
 }

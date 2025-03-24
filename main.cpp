@@ -6,16 +6,16 @@
 * helper function for wrapping things around the screen
 * will probably be relocated soon
 */
-void screenWrap(DynamicObject* dynamic, const int w, const int h) {
-    BoundingBox* hitbox = dynamic->getHitbox();
-    if (hitbox->LR.getX() < 0) {
-        hitbox->moveTo(w,hitbox->UL.getY());
-    } else if (hitbox->UL.getX() > w) {
-        hitbox->moveTo(0-hitbox->w,hitbox->UL.getY());
+void screenWrap(DynamicObject& dynamic, const int w, const int h) {
+    BoundingBox& hitbox = dynamic.getHitbox();
+    if (hitbox.LR.getX() < 0) {
+        hitbox.moveTo(w, hitbox.UL.getY());
+    } else if (hitbox.UL.getX() > w) {
+        hitbox.moveTo(0-hitbox.w, hitbox.UL.getY());
     }
 
-    if (hitbox->UL.getY() > h) {
-        hitbox->moveTo(hitbox->UL.getX(),0-hitbox->h);
+    if (hitbox.UL.getY() > h) {
+        hitbox.moveTo(hitbox.UL.getX(), 0-hitbox.h);
     }
 }
 
@@ -25,7 +25,7 @@ class myPlayer : public DefaultPlayer {
     int dashSpeed;
     bool canDash;
     public:
-        myPlayer(Color color_p, BoundingBox hitbox_p, Physics* physics, int dashSpeed_p) : DefaultPlayer(color_p, hitbox_p, physics){
+        myPlayer(Color color_p, BoundingBox hitbox_p, Physics& physics, int dashSpeed_p) : DefaultPlayer(color_p, hitbox_p, physics){
             dashSpeed = dashSpeed_p;
         };
 
@@ -34,25 +34,20 @@ class myPlayer : public DefaultPlayer {
                 return;
             } else if (dir > 0) {
                 canDash = false;
-                getVelocity()->setX(dashSpeed);
+                setVelocity(dashSpeed, getVelocity().getY());
             } else if (dir < 0) {
                 canDash = false;
-                getVelocity()->setX(-1 * dashSpeed);
+                setVelocity(-1 * dashSpeed, getVelocity().getY());
             }
         }
 
-        void update(Physics* physics, double deltaTime) {
+        void update(Physics& physics, double deltaTime) {
             DefaultPlayer::update(physics, deltaTime);
 
             if (isOnGround()) {
                 canDash = true;
             }
 
-        }
-
-
-        std::string typeOf() {
-            return "myPlayer";
         }
 };
 
@@ -71,11 +66,11 @@ class myController : public DefaultPlayerController {
         void checkMovement(const bool* keys, DefaultPlayer* player) {
             DefaultPlayerController::checkMovement(keys, player);
             if (keys[getDashButton()]) {
-                if (player->typeOf() == "myPlayer") {
+                if (myPlayer* myP = dynamic_cast<myPlayer*>(player)) {
                     if (keys[getMoveLeftButton()]){
-                        ((myPlayer*)player)->dash(-1);
+                        myP->dash(-1);
                     } else if (keys[getMoveRightButton()]) {
-                        ((myPlayer*)player)->dash(1);
+                        myP->dash(1);
                     }
                 }
                 
@@ -104,7 +99,7 @@ int main(int argc, char *argv[]) {
     }
 
     SDL_Renderer *renderer = SDL_CreateRenderer(window,NULL);
-    SDL_SetRenderVSync(renderer,1);
+    SDL_SetRenderVSync(renderer, 1);
     if(!renderer)
     {
         std::cout << "Failed to create renderer\n";
@@ -112,19 +107,19 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    SDL_SetRenderDrawColor(renderer,255,255,255,255);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
     bool keep_window_open = true;
     Physics physics = Physics();
-    Object test = Object(Color(0,255,0),BoundingBox(-50,500,100,900),&physics,false);
-    Object test2 = Object(Color(0,0,255),BoundingBox(100,450,25,100),&physics,true);
-    myPlayer player = myPlayer(Color(255,0,0),BoundingBox(300,100,50,50),&physics,450);
+    Object test = Object(Color(0, 255, 0), BoundingBox(-50, 500, 100, 900), physics, false);
+    Object test2 = Object(Color(0, 0, 255), BoundingBox(100, 450, 25, 100), physics, true);
+    myPlayer player = myPlayer(Color(255, 0, 0), BoundingBox(300, 100, 50, 50), physics, 450);
     myController controller = myController();
     controller.setJumpButton(BUTTON(SPACE));
     controller.setMoveLeftButton(BUTTON(LEFT));
     controller.setMoveRightButton(BUTTON(RIGHT));
-    DynamicObject test3 = DynamicObject(Color(0,0,255),BoundingBox(375,50,50,50),&physics);
+    DynamicObject test3 = DynamicObject(Color(0, 0, 255), BoundingBox(375, 50, 50, 50), physics);
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
     double deltaTime = 0;
@@ -135,19 +130,20 @@ int main(int argc, char *argv[]) {
         deltaTime = (double)((NOW - LAST) / (double)SDL_GetPerformanceFrequency() );
         double fps = 1.0/deltaTime;
         
-        SDL_SetRenderDrawColor(renderer,255,255,255,SDL_ALPHA_OPAQUE);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
         for (ICollidable* object : physics.getStatics()) {
             object->draw(renderer);
         }
         for (ICollidable* object : physics.getDynamics()) {
-            ((DynamicObject*)object)->update(&physics,deltaTime);
-            screenWrap((DynamicObject*)object,WIDTH,HEIGHT);
-            object->draw(renderer);
+            DynamicObject& dyn = dynamic_cast<DynamicObject&>(*object);
+            dyn.update(physics, deltaTime);
+            screenWrap(dyn, WIDTH, HEIGHT);
+            dyn.draw(renderer);
         }
         SDL_RenderPresent(renderer);
         const bool* keys = SDL_GetKeyboardState(NULL);
-        controller.checkMovement(keys,&player);
+        controller.checkMovement(keys, &player);
         while (SDL_PollEvent(&windowEvent) > 0) {
             switch(windowEvent.type) {
                 case SDL_EVENT_QUIT:

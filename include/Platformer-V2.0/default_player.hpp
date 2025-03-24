@@ -20,7 +20,7 @@ class DefaultPlayer : public DynamicObject {
          * @param physics the Physics object the DefaultPlayer follows the rules of
          * @return a DefaultPlayer object
          */
-        DefaultPlayer(Color color_p, BoundingBox hitbox_p, Physics* physics);
+        DefaultPlayer(Color color_p, BoundingBox hitbox_p, Physics& physics);
 
         /**
          * The function that when triggered, makes the player jump
@@ -38,13 +38,7 @@ class DefaultPlayer : public DynamicObject {
          * @param physics the physics object to pull information for collisions and gravity
          * @param deltaTime the length of time that passes between each frame
          */
-        virtual void update(Physics* physics,double deltaTime);
-
-        /**
-         * Returns the type of this object
-         * @return a string that is the type
-         */
-        virtual std::string typeOf();
+        virtual void update(Physics& physics,double deltaTime);
 };
 
 #endif

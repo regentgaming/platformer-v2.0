@@ -1,27 +1,21 @@
 #include <Platformer-V2.0/physics.hpp>
 
 //adds an Object to the statics list
-void Physics::addStatic(ICollidable* object) {
-    if (&Physics::statics == nullptr) {
-        Physics::statics = std::vector<ICollidable*>();
-    }
-    Physics::statics.push_back(object);
+void Physics::addStatic(ICollidable& object) {
+    Physics::statics.push_back(&object);
 }
 
 //adds a DynamicObject to the dynamics list
-void Physics::addDynamic(ICollidable* object) {
-    if (&Physics::dynamics == nullptr) {
-        Physics::dynamics = std::vector<ICollidable*>();
-    }
-    Physics::dynamics.push_back(object);
+void Physics::addDynamic(ICollidable& object) {
+    Physics::dynamics.push_back(&object);
 }
 
 //returns the statics list
-std::vector<ICollidable*> Physics::getStatics() {
+const std::vector<ICollidable*>& Physics::getStatics() const {
     return statics;
 }
 
 //returns the dynamics list
-std::vector<ICollidable*> Physics::getDynamics() {
+const std::vector<ICollidable*>& Physics::getDynamics() const {
     return dynamics;
 }

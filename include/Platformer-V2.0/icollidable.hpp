@@ -28,7 +28,13 @@ class ICollidable {
          * Returns the hitbox of the Object
          * @return the hitbox of the Object
          */
-        virtual BoundingBox* getHitbox() = 0;
+        virtual BoundingBox& getHitbox() = 0;
+
+        /**
+         * Returns if the Object is one-way or not
+         * @return if the Object is one-way or not
+         */
+        virtual bool getOneWay() const = 0;
 };
 
 #endif
