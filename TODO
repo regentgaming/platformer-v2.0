@@ -1,3 +1,5 @@
-Updated TODO 3/20/2025:
+Updated TODO 3/24/2025:
 
-Document DefaultPlayerController: Not started
+Start work on Levels
+Change how the physics stores objects (smart pointers probably)
+Figure out a way to check collisions better than just looping through everything
