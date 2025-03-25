@@ -107,11 +107,11 @@ void DynamicObject::handleCollisionX(Physics& physics, ICollidable& other) {
         } else if (velocity.getX() < 0.0) {
             hitbox.move(other.getHitbox().LR.getX() - hitbox.UL.getX(), 0);
         }
-
-        DynamicObject& dyn = dynamic_cast<DynamicObject&>(other);
-        if (&dyn) {
+        
+        try {
+            DynamicObject& dyn = dynamic_cast<DynamicObject&>(other);
             dyn.setVelocity(velocity.getX(), dyn.getVelocity().getY());
-        } else {
+        } catch (const std::bad_cast& e) {
             velocity.setX(0);
         }
     }
