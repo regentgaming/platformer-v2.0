@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
     if(!renderer)
     {
         std::cout << "Failed to create renderer\n";
-        std::cout << "SDL2 Error: " << SDL_GetError() << "\n";
+        std::cout << "SDL3 Error: " << SDL_GetError() << "\n";
         return EXIT_FAILURE;
     }
 
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
         while (SDL_PollEvent(&windowEvent) > 0) {
             switch(windowEvent.type) {
                 case SDL_EVENT_QUIT:
-                keep_window_open = false;
+                    keep_window_open = false;
                     break;
             }
         }
