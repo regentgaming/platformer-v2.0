@@ -1,6 +1,4 @@
-Updated TODO 2/24/26:
+Final TODO 5/17/26
 
 Add cyote timing for jumping
-Start work on Levels
-Change how the physics stores objects (smart pointers probably)
-Figure out a way to check collisions better than just looping through everything
+Start work on Screens
