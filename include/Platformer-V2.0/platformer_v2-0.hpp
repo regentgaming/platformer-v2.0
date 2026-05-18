@@ -7,6 +7,7 @@
 #include <Platformer-V2.0/icollidable.hpp>
 #include <Platformer-V2.0/object.hpp>
 #include <Platformer-V2.0/physics.hpp>
+#include <Platformer-V2.0/screen.hpp>
 #include <Platformer-V2.0/util.hpp>
 
 #endif

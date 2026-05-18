@@ -10,6 +10,16 @@ void Physics::addDynamic(ICollidable& object) {
     Physics::dynamics.push_back(&object);
 }
 
+// clear static vector
+void Physics::clearStatics() {
+    Physics::statics.clear();
+}
+
+// clear dynamic vector
+void Physics::clearDynamics() {
+    Physics::dynamics.clear();
+}
+
 //returns the statics list
 const std::vector<ICollidable*>& Physics::getStatics() const {
     return statics;

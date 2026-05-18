@@ -116,9 +116,6 @@ int main(int argc, char *argv[]) {
     Object test2 = Object(Color(0, 0, 255), BoundingBox(100, 450, 25, 100), physics, true);
     myPlayer player = myPlayer(Color(255, 0, 0), BoundingBox(300, 100, 50, 50), physics, 450);
     myController controller = myController();
-    controller.setJumpButton(BUTTON(SPACE));
-    controller.setMoveLeftButton(BUTTON(LEFT));
-    controller.setMoveRightButton(BUTTON(RIGHT));
     DynamicObject test3 = DynamicObject(Color(0, 0, 255), BoundingBox(375, 50, 50, 50), physics);
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;

@@ -9,9 +9,9 @@
  * A class that contains all the physics objects and constants for the project
  */
 class Physics {
-    /// a vector containing all the static objects for the project
+    /// a vector containing all the static objects currently on screen
     std::vector<ICollidable*> statics;
-    /// a vector containing all the dynamic objects for the project
+    /// a vector containing all the dynamic objects currently on screen
     std::vector<ICollidable*> dynamics;
 
     public:
@@ -29,6 +29,16 @@ class Physics {
          * @param object The object to be added
          */
         void addDynamic(ICollidable& object);
+
+        /**
+         * Clear the static vector list
+         */
+        void clearStatics();
+
+        /**
+         * Clear the dynamic vector list
+         */
+        void clearDynamics();
 
         /**
          * Returns the static object vector
