@@ -31,9 +31,24 @@ void DefaultPlayerController::setMoveLeftButton(SDL_Scancode button) {
 }
 
 //apply input
-void DefaultPlayerController::checkMovement(const bool* keys, DefaultPlayer* player) {
+void DefaultPlayerController::checkMovement(const bool* keys, DefaultPlayer* player, double deltaTime) {
+    static bool old_ground = true;
+    static bool new_ground = true;
+    static double coyote_tracker = 0;
+
+    old_ground = new_ground;
+    new_ground = player->isOnGround();
+
+    if (old_ground == false && new_ground == true) {
+        coyote_tracker = 0;
+    }
+
+    if (!(player->isOnGround())) {
+        coyote_tracker += deltaTime;
+    }
+    
     if (keys[getJumpButton()]) {
-        player->jump();
+        player->jump(&coyote_tracker);
     }
     if (keys[getMoveLeftButton()]) {
         player->move(-1);

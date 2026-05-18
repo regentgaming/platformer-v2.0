@@ -12,6 +12,12 @@
  * Can be inherited from to add new functinality to the player
  */
 class DefaultPlayer : public DynamicObject {
+    private:
+        /**  
+         * The amount of "Coyote Time" the player gets to jump
+         * in seconds
+         */
+        double coyote_time = 0.15;
     public:
         /**
          * Builds a new DefaultPlayer object from a Color, a BoundingBox, and a Physics object
@@ -25,7 +31,7 @@ class DefaultPlayer : public DynamicObject {
         /**
          * The function that when triggered, makes the player jump
          */
-        void jump();
+        void jump(double* coyote_tracker);
 
         /**
          * The function that applies left and right accelerations to the player

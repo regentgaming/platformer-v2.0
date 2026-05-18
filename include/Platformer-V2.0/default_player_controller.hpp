@@ -80,8 +80,9 @@ class DefaultPlayerController {
          * Function that applies the input to the player
          * @param keys an array representing what keys are pressed down (gathered from SDL)
          * @param player the player to apply the input to
+         * @param deltaTime the time elapsed since the last frame (in seconds)
          */
-        virtual void checkMovement(const bool* keys, DefaultPlayer* player);
+        virtual void checkMovement(const bool* keys, DefaultPlayer* player, double deltaTime);
 };
 
 

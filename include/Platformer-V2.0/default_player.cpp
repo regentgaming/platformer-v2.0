@@ -10,10 +10,14 @@ DefaultPlayer::DefaultPlayer(Color color_p, BoundingBox hitbox_p, Physics& physi
 }
 
 //function that makes the DefaultPlayer jump
-void DefaultPlayer::jump() {
+void DefaultPlayer::jump(double* coyote_tracker) {
     if (isOnGround()) {
         setOnGround(false);
         setVelocity(getVelocity().getX(), getVelocity().getY() + JUMP_FORCE);
+        *coyote_tracker = std::numeric_limits<double>::infinity();
+    } else if (*coyote_tracker <= DefaultPlayer::coyote_time) {
+        setVelocity(getVelocity().getX(), getVelocity().getY() + JUMP_FORCE);
+        *coyote_tracker = std::numeric_limits<double>::infinity();
     }
 }
 

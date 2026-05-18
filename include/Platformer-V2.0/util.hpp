@@ -2,6 +2,7 @@
 #define UTIL_H
 
 #include <SDL3/SDL.h>
+#include <limits>
 
 
 

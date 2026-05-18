@@ -63,8 +63,8 @@ class myController : public DefaultPlayerController {
             dashButton = button;
         }
 
-        void checkMovement(const bool* keys, DefaultPlayer* player) {
-            DefaultPlayerController::checkMovement(keys, player);
+        void checkMovement(const bool* keys, DefaultPlayer* player, double deltaTime) {
+            DefaultPlayerController::checkMovement(keys, player, deltaTime);
             if (keys[getDashButton()]) {
                 if (myPlayer* myP = dynamic_cast<myPlayer*>(player)) {
                     if (keys[getMoveLeftButton()]){
@@ -143,7 +143,7 @@ int main(int argc, char *argv[]) {
         }
         SDL_RenderPresent(renderer);
         const bool* keys = SDL_GetKeyboardState(NULL);
-        controller.checkMovement(keys, &player);
+        controller.checkMovement(keys, &player, deltaTime);
         while (SDL_PollEvent(&windowEvent) > 0) {
             switch(windowEvent.type) {
                 case SDL_EVENT_QUIT:
